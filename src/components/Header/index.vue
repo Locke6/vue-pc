@@ -4,7 +4,10 @@
       <div class="header-container">
         <div class="header-loginlist">
           <p>尚品汇欢迎您！</p>
-          <p><span>请</span><a href="#">登录</a> <a href="#">免费注册</a></p>
+          <p>
+            <span>请</span><router-link to="/login">登录</router-link>
+            <router-link to="/register">免费注册</router-link>
+          </p>
         </div>
         <div class="header-typelist">
           <a href="#">我的订单</a>
@@ -20,11 +23,13 @@
     </div>
     <div class="header-bottom">
       <h1>
-        <a href=""><img src="./images/logo.png" alt="主页logo" /> </a>
+        <router-link to="/"
+          ><img src="./images/logo.png" alt="主页logo" />
+        </router-link>
       </h1>
       <div class="header-search">
         <input type="text" />
-        <button>搜索</button>
+        <button @click="search">搜索</button>
       </div>
     </div>
   </div>
@@ -33,6 +38,12 @@
 <script>
 export default {
   name: 'Header',
+  methods: {
+    search() {
+      //发送请求
+      this.$router.push('/search')
+    },
+  },
 }
 </script>
 
