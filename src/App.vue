@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div class="outer">
         <Header />
         <router-view></router-view>
         <Footer />
     </div>
 </template>
 
-    
+     
 
 <script>
 import Header from "./components/Header";
@@ -21,4 +21,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 </style>
