@@ -7,22 +7,30 @@ import Login from "../views/Login";
 import Register from "../views/Register";
 Vue.use(VueRouter);
 export default new VueRouter({
-    routes: [
-        {
-            path: "/",
-            component: Home,
-        },
-        {
-            path: "/search",
-            component: Search,
-        },
-        {
-            path: "/login",
-            component: Login,
-        },
-        {
-            path: "/register",
-            component: Register,
-        },
-    ],
+  routes: [
+    {
+      path: "/",
+      component: Home,
+    },
+    {
+      name: 'search',
+      path: "/search/:searchText?",
+      component: Search,
+
+    },
+    {
+      path: "/login",
+      component: Login,
+      meta: {
+        isFooterShow: true
+      }
+    },
+    {
+      path: "/register",
+      component: Register,
+      meta: {
+        isFooterShow: true
+      }
+    },
+  ],
 });
