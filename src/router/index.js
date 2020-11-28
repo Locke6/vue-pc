@@ -6,7 +6,7 @@ import Search from "../views/Search";
 import Login from "../views/Login";
 import Register from "../views/Register";
 Vue.use(VueRouter);
-
+// console.log(new VueRouter)
 //重写$router的push方法,因为原生push会返回promise，如果重复调用push会报错
 const push = VueRouter.prototype.push
 VueRouter.prototype.push = function (location, onComplete, onAbort) {

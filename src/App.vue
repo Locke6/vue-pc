@@ -1,25 +1,25 @@
 <template>
-    <div class="outer">
-        <Header />
-        <router-view></router-view>
-        <Footer v-if="!$route.meta.isFooterShow"/>
-    </div>
+  <div class="outer">
+    <Header />
+    <router-view></router-view>
+    <Footer v-if="!$route.meta.isFooterShow" />
+  </div>
 </template>
 
      
 
 <script>
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Header from './components/Header'
+import Footer from './components/Footer'
+
 export default {
-    name: "App",
-    components: {
-        Header,
-        Footer,
-    },
-};
+  name: 'App',
+  components: {
+    Header,
+    Footer,
+  },
+}
 </script>
 
 <style lang="less" scoped>
-
 </style>
