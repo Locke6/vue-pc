@@ -108,7 +108,7 @@ export default {
   position: absolute;
   left: 210px;
   width: 734px;
-  height: 461px;
+  height: 500px;
   top: 0;
   background: #f7f7f7;
   border: 1px solid #ddd;
@@ -145,7 +145,8 @@ export default {
   text-align: right;
   padding: 0 6px;
   width: 70px;
-  height: 25px;
+  height: 14px;
+  margin: 5px;
   font-weight: 700;
 }
 .category-item dd {
@@ -154,11 +155,14 @@ export default {
   overflow: hidden;
 }
 .category-item em {
+  display: inline-block;
   height: 14px;
   line-height: 14px;
   padding: 0 6px;
-  margin-top: 5px!important;
+  margin-top: 5px;
   border-left: 1px solid #ccc;
 }
-
+.category-item em:last-child {
+  border-right: 1px solid #ccc;
+}
 </style>
