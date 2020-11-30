@@ -7,6 +7,7 @@
 
 <script>
 import reqLogin from '@api/user'
+import {Message} from 'element-ui'
 export default {
   name: 'Search',
   methods: {
@@ -17,7 +18,7 @@ export default {
           console.log(res)
         })
         .catch((err) => {
-          console.log(err)
+          Message.error(err)
         })
     },
   },

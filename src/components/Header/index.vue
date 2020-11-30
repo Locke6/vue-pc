@@ -81,9 +81,7 @@ export default {
 .header {
   width: 100%;
 }
-.header .header-loginlist a {
-  text-decoration: none;
-}
+
 .header-top {
   width: 100%;
   min-width: 1200px;
