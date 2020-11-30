@@ -1,39 +1,69 @@
 <template>
   <div class="category">
     <div class="category-container">
-      <div>
+      <div
+        class="category-whole"
+        @mouseenter="isSearchShow = true"
+        @mouseleave="isSearchShow = false"
+      >
+        <!-- 列表大标题 -->
         <h2 class="category-all">全部商品分类</h2>
-        <div class="category-sort">
+        <!-- 分类列表 -->
+        <transition name="categoryShow">
           <div
-            class="category-items"
-            v-for="category in categories"
-            :key="category.categoryId"
+            class="category-sort"
+            @click="goSearch"
+            v-show="isShow || isSearchShow"
           >
-            <h3>
-              <a href="#">{{ category.categoryName }}</a>
-            </h3>
-            <div class="category-itemlist">
-              <div class="category-item">
-                <dl
-                  v-for="child in category.categoryChild"
-                  :key="child.categoryId"
+            <div
+              class="category-items"
+              v-for="category in categories"
+              :key="category.categoryId"
+            >
+              <h3>
+                <!-- 一级分类 -->
+                <a
+                  :data-categoryName="category.categoryName"
+                  :data-categoryId="category.categoryId"
+                  :data-categoryType="1"
+                  >{{ category.categoryName }}</a
                 >
-                  <dt>
-                    <a href="#">{{ child.categoryName }}</a>
-                  </dt>
-                  <dd>
-                    <em
-                      v-for="grandChild in child.categoryChild"
-                      :key="grandChild.categoryId"
-                    >
-                      <a href="#">{{ grandChild.categoryName }}</a>
-                    </em>
-                  </dd>
-                </dl>
+              </h3>
+              <div class="category-itemlist">
+                <div class="category-item">
+                  <dl
+                    v-for="child in category.categoryChild"
+                    :key="child.categoryId"
+                  >
+                    <dt>
+                      <!-- 二级分类 -->
+                      <a
+                        :data-categoryName="child.categoryName"
+                        :data-categoryId="child.categoryId"
+                        :data-categoryType="2"
+                        >{{ child.categoryName }}</a
+                      >
+                    </dt>
+                    <dd>
+                      <em
+                        v-for="grandChild in child.categoryChild"
+                        :key="grandChild.categoryId"
+                      >
+                        <!-- 三级分类 -->
+                        <a
+                          :data-categoryName="grandChild.categoryName"
+                          :data-categoryId="grandChild.categoryId"
+                          :data-categoryType="3"
+                          >{{ grandChild.categoryName }}</a
+                        >
+                      </em>
+                    </dd>
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </transition>
       </div>
       <nav class="category-nav">
         <a href="#">服装城</a>
@@ -53,6 +83,12 @@
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'Category',
+  data() {
+    return {
+      isSearchShow: false,
+      isShow: this.$route.path === '/',
+    }
+  },
   computed: {
     ...mapState({
       categories: (state) => state.home.categories,
@@ -60,6 +96,26 @@ export default {
   },
   methods: {
     ...mapActions(['getCategories']),
+    //委托跳转
+    goSearch(e) {
+      const { categoryname, categoryid, categorytype } = e.target.dataset
+      //如果点击不是a标签，没有跳转
+      if (!categoryname) return
+      // 隐藏列表
+      this.isSearchShow = false
+      const location = {
+        name: 'search',
+        query: {
+          categoryName: categoryname,
+          [`category${categorytype}Id`]: categoryid,
+        },
+      }
+      const { searchText } = this.$route.params
+      if (searchText) {
+        location.params = { searchText }
+      }
+      this.$router.push(location)
+    },
   },
   mounted() {
     this.getCategories()
@@ -78,6 +134,7 @@ export default {
   margin: 0 auto;
   display: flex;
   position: relative;
+  z-index: 9999;
 }
 .category-all {
   width: 210px;
@@ -103,6 +160,13 @@ export default {
   width: 210px;
   background: #fafafa;
   top: 47px;
+  // 隐藏到显示过程
+  &.categoryShow-enter-active {
+    transition: height 3s;
+  }
+  &.categoryShow-enter {
+    height: 0px;
+  }
 }
 
 .category-itemlist {

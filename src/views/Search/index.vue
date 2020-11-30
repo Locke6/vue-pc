@@ -1,13 +1,15 @@
 <template>
   <div>
-    <div>Search...</div>
+    <Category />
     <button @click="search">发送</button>
   </div>
 </template>
 
 <script>
 import reqLogin from '@api/user'
-import {Message} from 'element-ui'
+import { Message } from 'element-ui'
+
+import Category from '@comps/Category'
 export default {
   name: 'Search',
   methods: {
@@ -21,6 +23,9 @@ export default {
           Message.error(err)
         })
     },
+  },
+  components: {
+    Category,
   },
 }
 </script>
