@@ -50,18 +50,19 @@
 </template>
 
 <script>
-import { category } from '@api/category'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'Category',
-  data() {
-    return {
-      categories: [],
-    }
+  computed: {
+    ...mapState({
+      categories: (state) => state.home.categories,
+    }),
   },
-  async mounted() {
-    const res = await category()
-    // console.log(res)
-    this.categories = res
+  methods: {
+    ...mapActions(['getCategories']),
+  },
+  mounted() {
+    this.getCategories()
   },
 }
 </script>
