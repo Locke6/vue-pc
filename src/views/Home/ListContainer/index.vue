@@ -2,27 +2,101 @@
   <div class="list-container">
     <div class="block">
       <!-- <span class="demonstration">Click 指示器触发</span> -->
-      <el-carousel trigger="click" height="500px">
-        <el-carousel-item v-for="item in path" :key="item">
+      <el-carousel trigger="click" height="490px" :interval="4000">
+        <el-carousel-item v-for="item in banners" :key="item.id">
           <!-- <h3 class="small">{{ item }}</h3> -->
-          <img :src="item" alt="" />
+          <img :src="item.imgUrl" alt="" />
         </el-carousel-item>
       </el-carousel>
+    </div>
+    <div class="list-container-right">
+      <div class="news">
+        <div class="news-top">
+          <h4>尚品汇快报</h4>
+          <p>更多 ></p>
+        </div>
+        <div class="news-bottom">
+          <ul>
+            <li><span>[特惠]</span><span>备战开学季 全民半价购数码</span></li>
+            <li><span>[特惠]</span><span>备战开学季 全民半价购数码</span></li>
+            <li><span>[特惠]</span><span>备战开学季 全民半价购数码</span></li>
+            <li><span>[特惠]</span><span>备战开学季 全民半价购数码</span></li>
+            <li><span>[特惠]</span><span>备战开学季 全民半价购数码</span></li>
+            <li><span>[特惠]</span><span>备战开学季 全民半价购数码</span></li>
+          </ul>
+        </div>
+      </div>
+      <ul class="lifeservices">
+        <li class="life-item">
+          <i class="list-item"></i>
+          <span class="service-intro">话费</span>
+        </li>
+        <li class="life-item">
+          <i class="list-item"></i>
+          <span class="service-intro">机票</span>
+        </li>
+        <li class="life-item">
+          <i class="list-item"></i>
+          <span class="service-intro">电影票</span>
+        </li>
+        <li class="life-item">
+          <i class="list-item"></i>
+          <span class="service-intro">游戏</span>
+        </li>
+        <li class="life-item">
+          <i class="list-item"></i>
+          <span class="service-intro">彩票</span>
+        </li>
+        <li class="life-item">
+          <i class="list-item"></i>
+          <span class="service-intro">加油站</span>
+        </li>
+        <li class="life-item">
+          <i class="list-item"></i>
+          <span class="service-intro">酒店</span>
+        </li>
+        <li class="life-item">
+          <i class="list-item"></i>
+          <span class="service-intro">火车票</span>
+        </li>
+        <li class="life-item">
+          <i class="list-item"></i>
+          <span class="service-intro">众筹</span>
+        </li>
+        <li class="life-item">
+          <i class="list-item"></i>
+          <span class="service-intro">理财</span>
+        </li>
+        <li class="life-item">
+          <i class="list-item"></i>
+          <span class="service-intro">礼品卡</span>
+        </li>
+        <li class="life-item">
+          <i class="list-item"></i>
+          <span class="service-intro">白条</span>
+        </li>
+      </ul>
+      <div class="list-ad">
+        <img src="./images/ad1.png" alt="" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'ListContainer',
-  data() {
-    return {
-      path: [
-        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1606720985117&di=a5cc66e5f891f5eecf78a28f7c04618a&imgtype=0&src=http%3A%2F%2Fa4.att.hudong.com%2F27%2F67%2F01300000921826141299672233506.jpg',
-        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1606720985116&di=b4d2bb9bb62f09df2ad6e39e8d26f851&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F86%2F10%2F01300000184180121920108394217.jpg',
-        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1606720985116&di=c966f89d66c735fef3705f9668997125&imgtype=0&src=http%3A%2F%2Ffile02.16sucai.com%2Fd%2Ffile%2F2014%2F0829%2F372edfeb74c3119b666237bd4af92be5.jpg',
-      ],
-    }
+  computed: {
+    ...mapState({
+      banners: (state) => state.home.banners,
+    }),
+  },
+  methods: {
+    ...mapActions(['getBanners']),
+  },
+  mounted() {
+    this.getBanners()
   },
 }
 </script>
@@ -34,14 +108,163 @@ export default {
   position: relative;
 }
 .block {
-  width: 740px;
+  width: 730px;
   padding: 5px;
   position: absolute;
   top: 0;
   left: 210px;
 }
-.block img {
-  width: 730px;
-  height: 490px;
+.list-container-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 5px;
+}
+.news {
+  width: 250px;
+  box-sizing: border-box;
+  border: 1px solid #e4e4e4;
+}
+.news-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px 5px 0;
+  border-bottom: 1px solid #e4e4e4;
+  height: 32px;
+}
+
+.news-top h4 {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0 10px;
+}
+.news-top p {
+  padding: 0 10px;
+}
+.news-bottom {
+  padding: 5px 15px;
+  height: 166px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.news-bottom li {
+  height: 27px;
+  line-height: 27px;
+}
+.news-bottom li span:first-child {
+  font-weight: bold;
+}
+.lifeservices {
+  border-right: 1px solid #e4e4e4;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  width: 250px;
+  box-sizing: border-box;
+
+  .life-item {
+    border-left: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+    margin-right: -1px;
+    height: 64px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    width: 25%;
+
+    .list-item {
+      background-image: url(../../../assets/images/icons.png);
+      width: 61px;
+      height: 40px;
+      display: block;
+    }
+
+    .service-intro {
+      line-height: 22px;
+      width: 60px;
+      display: block;
+    }
+
+    &:nth-child(1) {
+      .list-item {
+        background-position: 0px -5px;
+      }
+    }
+
+    &:nth-child(2) {
+      .list-item {
+        background-position: -62px -5px;
+      }
+    }
+
+    &:nth-child(3) {
+      .list-item {
+        background-position: -126px -5px;
+      }
+    }
+
+    &:nth-child(4) {
+      .list-item {
+        background-position: -190px -5px;
+      }
+    }
+
+    &:nth-child(5) {
+      .list-item {
+        background-position: 0px -76px;
+      }
+    }
+
+    &:nth-child(6) {
+      .list-item {
+        background-position: -62px -76px;
+      }
+    }
+
+    &:nth-child(7) {
+      .list-item {
+        background-position: -126px -76px;
+      }
+    }
+
+    &:nth-child(8) {
+      .list-item {
+        background-position: -190px -76px;
+      }
+    }
+
+    &:nth-child(9) {
+      .list-item {
+        background-position: 0px -146px;
+      }
+    }
+
+    &:nth-child(10) {
+      .list-item {
+        background-position: -62px -146px;
+      }
+    }
+
+    &:nth-child(11) {
+      .list-item {
+        background-position: -126px -146px;
+      }
+    }
+
+    &:nth-child(12) {
+      .list-item {
+        background-position: -190px -146px;
+      }
+    }
+  }
+}
+.list-ad {
+  margin-top: 5px;
+}
+.list-ad img{
+  width: 250px;
 }
 </style>

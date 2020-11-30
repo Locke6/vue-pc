@@ -7,6 +7,8 @@ import store from '@store/'
 import './styles/reset.css'
 import './styles/index.css'
 import './plugins/element.js'
+// 引入mock
+import './mock/mockServer'
 Vue.config.productionTip = false;
 
 new Vue({

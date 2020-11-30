@@ -1,0 +1,6 @@
+.outer {
+  color: red;
+}
+.outer.sun {
+  color: yellow;
+}

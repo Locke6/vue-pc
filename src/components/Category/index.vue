@@ -118,6 +118,8 @@ export default {
     },
   },
   mounted() {
+    // 如果vuex中categories已经有数据就不需要再次加载，提高性能
+    if (this.categories.length) return
     this.getCategories()
   },
 }

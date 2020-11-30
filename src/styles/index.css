@@ -5,3 +5,7 @@ a:hover {
   color: rgb(79, 76, 212) !important;
   cursor: pointer;
 }
+html,
+body {
+  height: 100%;
+}
