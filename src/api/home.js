@@ -23,3 +23,11 @@ export const reqGetFloors = function () {
     url: "/floors"
   })
 }
+
+//获取每日推荐图片
+export const reqGetRecommends = function () {
+  return mockRequest({
+    method: "GET",
+    url: "/recommends"
+  })
+}

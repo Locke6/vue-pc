@@ -44,10 +44,10 @@ export default {
     }),
   },
   methods: {
-    ...mapActions(['GetFloors']),
+    ...mapActions(['getFloors']),
   },
   mounted() {
-    this.GetFloors()
+    this.getFloors()
   },
 }
 </script>

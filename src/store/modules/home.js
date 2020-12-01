@@ -1,9 +1,10 @@
-import { reqGetCategories, reqGetBanners, reqGetFloors } from '@api/home'
+import { reqGetCategories, reqGetBanners, reqGetFloors, reqGetRecommends } from '@api/home'
 export default {
   state: {
     categories: [],
     banners: [],
-    floors: []
+    floors: [],
+    recommends: []
   },
   getters: {},
   actions: {
@@ -20,9 +21,15 @@ export default {
     },
 
     // 请求展示列表数据
-    async GetFloors ({ commit }) {
+    async getFloors ({ commit }) {
       const floors = await reqGetFloors()
       commit("GET_FLOORS", floors)
+    },
+
+    //请求每日推荐图片
+    async getRecommends ({ commit }) {
+      const recommends = await reqGetRecommends()
+      commit("GET_RECOMMENDS", recommends)
     }
   },
   mutations: {
@@ -36,6 +43,10 @@ export default {
 
     GET_FLOORS (state, floors) {
       state.floors = floors
+    },
+
+    GET_RECOMMENDS (state, recommends) {
+      state.recommends = recommends
     },
   }
 }
