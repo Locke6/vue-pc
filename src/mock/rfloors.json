@@ -2,10 +2,10 @@
   {
     "id|+1": 1,
     "name": "@ctitle(2,4)",
-    "keywords|4-8": [
+    "keywords|6": [
       "@ctitle(2,4)"
     ],
-    "imgUrl": "@image()",
+    "imgUrl": "@image('208x248','@color')",
     "navList|6-10": [
       {
         "url": "#",
@@ -15,12 +15,12 @@
     "carouselList|4": [
       {
         "id|+1": 1,
-        "imgUrl": "@image('200x200', '@color')"
+        "imgUrl": "@image('330x360', '@color')"
       }
     ],
     "recommendList|4": [
-      "@image('200x200', '@color')"
+      "@image('220x180', '@color')"
     ],
-    "bigImg": "@image('200x200', '@color')"
+    "bigImg": "@image('220x359', '@color')"
   }
 ]

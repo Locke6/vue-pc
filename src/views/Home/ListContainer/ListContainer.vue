@@ -105,20 +105,15 @@ export default {
 .list-container {
   width: 1200px;
   margin: 0 auto;
-  position: relative;
+  display: flex;
+  justify-content: flex-end;
 }
 .list-container-center {
   width: 730px;
   height: 500px;
   padding: 5px;
-  position: absolute;
-  top: 0;
-  left: 210px;
 }
 .list-container-right {
-  position: absolute;
-  top: 0;
-  right: 0;
   margin-top: 5px;
 }
 .news {

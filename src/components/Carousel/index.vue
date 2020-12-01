@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-container">
+  <div class="swiper-container" ref="swiper">
     <div class="swiper-wrapper">
       <div
         class="swiper-slide"
@@ -32,30 +32,39 @@ export default {
       required: true,
     },
   },
+  methods: {
+    initSwiper() {
+      new Swiper(this.$refs.swiper, {
+        loop: true, // 循环模式选项
+        // 自动播放
+        autoplay: {
+          delay: 2000,
+          disableOnInteraction: false, // 当用户点击下一页时，仍会开启自动轮播
+        },
+        // 如果需要分页器
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+
+        // 如果需要前进后退按钮
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      })
+    },
+  },
   watch: {
     carouselList() {
       this.$nextTick(() => {
-        new Swiper('.swiper-container', {
-          loop: true, // 循环模式选项
-          // 自动播放
-          autoplay: {
-            delay: 2000,
-            disableOnInteraction: false, // 当用户点击下一页时，仍会开启自动轮播
-          },
-          // 如果需要分页器
-          pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-          },
-
-          // 如果需要前进后退按钮
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          },
-        })
+        this.initSwiper()
       })
     },
+  },
+  mounted() {
+    if (!this.carouselList.length) return
+    this.initSwiper()
   },
 }
 </script>
