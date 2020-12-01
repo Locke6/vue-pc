@@ -1,8 +1,13 @@
 <template>
   <div class="list-container">
-    <div class="list-container-center">
-      <!--banner轮播-->
-      <Carousel :carouselList="banners" />
+    <div class="block">
+      <!-- <span class="demonstration">Click 指示器触发</span> -->
+      <el-carousel trigger="click" height="490px" :interval="4000">
+        <el-carousel-item v-for="item in banners" :key="item.id">
+          <!-- <h3 class="small">{{ item }}</h3> -->
+          <img :src="item.imgUrl" alt="" />
+        </el-carousel-item>
+      </el-carousel>
     </div>
     <div class="list-container-right">
       <div class="news">
@@ -80,8 +85,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import Carousel from '@comps/Carousel'
-
 export default {
   name: 'ListContainer',
   computed: {
@@ -89,14 +92,11 @@ export default {
       banners: (state) => state.home.banners,
     }),
   },
-  components: {
-    Carousel,
-  },
   methods: {
     ...mapActions(['getBanners']),
   },
-  async mounted() {
-    await this.getBanners()
+  mounted() {
+    this.getBanners()
   },
 }
 </script>
@@ -107,9 +107,8 @@ export default {
   margin: 0 auto;
   position: relative;
 }
-.list-container-center {
+.block {
   width: 730px;
-  height: 500px;
   padding: 5px;
   position: absolute;
   top: 0;
