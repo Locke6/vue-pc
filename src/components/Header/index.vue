@@ -66,7 +66,11 @@ export default {
       if (categoryName) {
         location.query = this.$route.query
       }
-      this.$router.push(location)
+      if (this.$route.name === 'search') {
+        this.$router.replace(location)
+      } else {
+        this.$router.push(location)
+      }
 
       // 方式三，可选参数query
       /* const location = {
@@ -77,6 +81,11 @@ export default {
       }
       this.$router.push(location) */
     },
+  },
+  mounted() {
+    this.$bus.$on('clearKeyword', () => {
+      this.searchText = ''
+    })
   },
 }
 </script>

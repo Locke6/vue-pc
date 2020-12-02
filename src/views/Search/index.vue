@@ -11,10 +11,12 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-show="options.categoryName">
+              {{ options.categoryName }}<i @click="clearCategoryName">×</i>
+            </li>
+            <li class="with-x" v-show="options.keyword">
+              {{ options.keyword }}<i @click="clearKeyword">×</i>
+            </li>
           </ul>
         </div>
 
@@ -153,6 +155,7 @@ export default {
   },
   methods: {
     ...mapActions(['getProductList']),
+    // 更新商品列表
     updateProductList() {
       const { searchText: keyword } = this.$route.params
       const {
@@ -169,7 +172,25 @@ export default {
         category2Id,
         category1Id,
       }
+      this.options = options
       this.getProductList(options)
+    },
+    // 删除标签
+    clearCategoryName() {
+      this.options.categoryName = ''
+      this.$router.replace({
+        name: 'search',
+        params: this.$route.params,
+      })
+    },
+    // 删除标签
+    clearKeyword() {
+      this.options.keyword = ''
+      this.$bus.$emit('clearKeyword')
+      this.$router.replace({
+        name: 'search',
+        query: this.$route.query,
+      })
     },
   },
   watch: {
@@ -178,7 +199,7 @@ export default {
       handler() {
         this.updateProductList()
       },
-      immediate:true
+      immediate: true,
     },
   },
   mounted() {},
