@@ -3,6 +3,7 @@
     <Header />
     <router-view></router-view>
     <Footer v-if="!$route.meta.isFooterShow" />
+
   </div>
 </template>
 
@@ -17,6 +18,7 @@ export default {
   components: {
     Header,
     Footer,
+
   },
 }
 </script>

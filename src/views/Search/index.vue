@@ -59,7 +59,7 @@
                   <div class="price">
                     <strong>
                       <em>¥</em>
-                      <i>{{goods.price}}</i>
+                      <i>{{ goods.price }}</i>
                     </strong>
                   </div>
                   <div class="attr">
@@ -67,7 +67,7 @@
                       target="_blank"
                       href="item.html"
                       title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】"
-                      >{{goods.title}}</a
+                      >{{ goods.title }}</a
                     >
                   </div>
                   <div class="commit">
@@ -127,22 +127,61 @@
 import SearchSelector from './SearchSelector/SearchSelector'
 import Category from '@comps/Category'
 
-import {mapGetters,mapActions} from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'Search',
+  data() {
+    return {
+      options: {
+        category3Id: '',
+        categoryName: '',
+        keyword: '',
+        order: '',
+        pageNo: 1,
+        pageSize: 10,
+        props: [],
+        trademark: '',
+      },
+    }
+  },
   components: {
     SearchSelector,
     Category,
   },
-  computed:{
-    ...mapGetters(['goodsList'])
+  computed: {
+    ...mapGetters(['goodsList']),
   },
-  methods:{
-    ...mapActions(['getProductList'])
+  methods: {
+    ...mapActions(['getProductList']),
+    updateProductList() {
+      const { searchText: keyword } = this.$route.params
+      const {
+        categoryName,
+        category3Id,
+        category2Id,
+        category1Id,
+      } = this.$route.query
+      const options = {
+        ...this.options,
+        keyword,
+        categoryName,
+        category3Id,
+        category2Id,
+        category1Id,
+      }
+      this.getProductList(options)
+    },
   },
-  mounted(){
-    this.getProductList()
-  }
+  watch: {
+    // 监视路径变化，请求列表数据
+    $route: {
+      handler() {
+        this.updateProductList()
+      },
+      immediate:true
+    },
+  },
+  mounted() {},
 }
 </script>
 

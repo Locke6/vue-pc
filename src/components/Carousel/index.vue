@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     initSwiper() {
-      new Swiper(this.$refs.swiper, {
+      this.swiper = new Swiper(this.$refs.swiper, {
         loop: true, // 循环模式选项
         // 自动播放
         autoplay: {
@@ -57,12 +57,15 @@ export default {
   },
   watch: {
     carouselList() {
+      if (this.swiper) return
       this.$nextTick(() => {
         this.initSwiper()
       })
     },
   },
   mounted() {
+    //floor->一进来carouselList是有数据的，不会触发watch
+    // 所以可以在mounted阶段new Swiper
     if (!this.carouselList.length) return
     this.initSwiper()
   },

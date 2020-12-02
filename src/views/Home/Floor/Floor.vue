@@ -81,6 +81,9 @@ export default {
     margin: 0 auto;
 
     .title {
+      // display: flex;
+      // justify-content: space-between;
+      // align-items: center;
       .fl {
         float: left;
         color: #c81623;
@@ -92,7 +95,7 @@ export default {
 
       .fr {
         float: right;
-
+        margin-top: 8px;
         .nav-tabs {
           margin: 10px 0 0;
           display: inline-block;
@@ -112,13 +115,13 @@ export default {
               }
             }
 
-            &:nth-child(7) {
+            /* &:nth-child(7) {
               a {
                 &::after {
                   content: '';
                 }
               }
-            }
+            } */
 
             &.active {
               a {
