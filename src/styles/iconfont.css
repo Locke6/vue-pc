@@ -1,0 +1,37 @@
+@font-face {
+  font-family: 'iconfont';
+  src: url('../assets/fonts/iconfont.eot?t=1606904865890'); /* IE9 */
+  src: url('../assets/fonts/iconfont.eot?t=1606904865890#iefix')
+      format('embedded-opentype'),
+    /* IE6-IE8 */
+      url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAMoAAsAAAAAB4QAAALZAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDIgqCCIFqATYCJAMUCwwABCAFhG0HcRuPBsgekiQlKnugALXhgYMA8fD9fv9b+8j9Kk1EiKLT8WSSCE3MGtOhFFKgi4X8zqZ6nRtX+gQ7E1VBXQt1U4/7z3u9df4s1snHJqgqD2B2AOoWD8x6616Z/JckVUnQhCIof7C5T+nM/3/v9I863vkgrWvPcpljap86AWYLKEr3tKLICiwA7bBdxODAC3q1+wQ6jTP0Hd7cP4JRBVoWiGtSmDDaiShKlG8Xmom9RbxRtaenKQVey+/HX+UYJakZWnvk6oYDyz/mD83nrTtOc4z0PBeiQ2SsAoW4OJk5bUBE1IDOywZtAo0ipB+PfmirxZnqJS28U/p+VpL/PNFAtd1gv5st/HhIEcGPR4jEjyeIzI+nMgupraCzm9sHnPSZs9rAVw7MT09f58/bO4/8LAp8si/DE424LgdX6DpfpMtSvm762VfpTLLKn+XDzPMvvKV5p9uf5iaUsJI2vWXSfTQtxbcsLL3b+cSkjSWlmbbrppQu/yjC4oWzsw6+zX4sNLOdk7OU4P9zbW3ye/OndCKph0n57qdlu5/nTjf3yszuXjt8vOf7/zPlWQp4tl0iktq0FNhWSjmy1pK3UknuqwaBSxM6daIFBQb9nKMbATcS2o3s8LUZayBrN4sX5ipUXXZBo90+6LRi63CXIWRAlA4su3Eg9HuHpNc3yPp18ML8hmpUFxr9MQCdTsXQmV3mQ44fIjQ1OsxqMWmrkBO7Hlf1ByhqvkltuWSfIMUyzkr5Yj+/hSHSGRviuihrzRknFbBN5zH0fcUiUi7aOl/VOqoUCnzqTXlbBTDuEIJMGnIwlhZGsikhzrtr44PPH0BCjc9EC7SF4AlEYnJ0piSvCMC3NCGI9i2vxOqEMk3jGI4oAWbTmYV8PoWJpme5kE3Lq+5IRSoKuBOHavL364J/PASd0DM1UuQoUaPRc4FINXK1KGcp35npKB2qCUvD7MJYLn1fhmI+lfXNAAAAAA==')
+      format('woff2'),
+    url('../assets/fonts/iconfont.woff?t=1606904865890') format('woff'),
+    url('../assets/fonts/iconfont.ttf?t=1606904865890') format('truetype'),
+    /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+      url('../assets/fonts/iconfont.svg?t=1606904865890#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family: 'iconfont' !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-arrow-up-bold:before {
+  content: '\e685';
+}
+
+.icon-arrow-down-bold:before {
+  content: '\e686';
+}
+
+.icon-arrow-up-filling:before {
+  content: '\e688';
+}
+
+.icon-arrow-down-filling:before {
+  content: '\e689';
+}

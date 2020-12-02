@@ -11,6 +11,8 @@ import './plugins/element.js'
 import './mock/mockServer'
 Vue.config.productionTip = false;
 
+//引入字体图标
+import './styles/iconfont.css'
 new Vue({
   beforeCreate () {
     Vue.prototype.$bus = this

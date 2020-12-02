@@ -27,7 +27,8 @@
               v-for="(prop, index) in options.props"
               :key="prop"
             >
-              {{prop.split(":")[2]}}：{{ prop.split(":")[1] }}<i @click="clearProps(index)">×</i>
+              {{ prop.split(':')[2] }}：{{ prop.split(':')[1]
+              }}<i @click="clearProps(index)">×</i>
             </li>
           </ul>
         </div>
@@ -40,23 +41,52 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li
+                  :class="{ active: this.options.order.indexOf('1') > -1 }"
+                  @click="setOrder('1')"
+                >
+                  <a>
+                    综合<i
+                      :class="{
+                        iconfont: true,
+                        'icon-arrow-up-bold': !onComposite,
+                        'icon-arrow-down-bold': onComposite,
+                      }"
+                    ></i>
+                  </a>
                 </li>
                 <li>
-                  <a href="#">销量</a>
+                  <a>销量</a>
                 </li>
                 <li>
-                  <a href="#">新品</a>
+                  <a>新品</a>
                 </li>
                 <li>
-                  <a href="#">评价</a>
+                  <a>评价</a>
                 </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li
+                  :class="{ active: this.options.order.indexOf('2') > -1 }"
+                  @click="setOrder('2')"
+                >
+                  <a
+                    >价格
+                    <span
+                      ><i
+                        :class="{
+                          iconfont: true,
+                          'icon-arrow-up-filling': true,
+                          active: options.order.indexOf('2') > -1 && !onPrice,
+                        }"
+                      ></i
+                      ><i
+                        :class="{
+                          iconfont: true,
+                          'icon-arrow-down-filling': true,
+                          active: options.order.indexOf('2') > -1 && onPrice,
+                        }"
+                      ></i
+                    ></span>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -102,34 +132,17 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
+          <div class="block">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="options.pageNo"
+              :page-sizes="[5, 10, 15, 20]"
+              :page-size="5"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total"
+            >
+            </el-pagination>
           </div>
         </div>
       </div>
@@ -150,12 +163,14 @@ export default {
         category3Id: '',
         categoryName: '',
         keyword: '',
-        order: '',
+        order: '1:desc',
         pageNo: 1,
-        pageSize: 10,
+        pageSize: 5,
         props: [],
         trademark: '',
       },
+      onComposite: true,
+      onPrice: true,
     }
   },
   components: {
@@ -163,12 +178,12 @@ export default {
     Category,
   },
   computed: {
-    ...mapGetters(['goodsList']),
+    ...mapGetters(['goodsList', 'total']),
   },
   methods: {
     ...mapActions(['getProductList']),
     // 更新商品列表
-    updateProductList() {
+    updateProductList(pageNo) {
       const { searchText: keyword } = this.$route.params
       const {
         categoryName,
@@ -183,6 +198,7 @@ export default {
         category3Id,
         category2Id,
         category1Id,
+        pageNo,
       }
       this.options = options
       this.getProductList(options)
@@ -223,6 +239,43 @@ export default {
     clearProps(index) {
       this.options.props.splice(index, 1)
       this.updateProductList()
+    },
+    // 按综合/价格重排商品
+    setOrder(order) {
+      let [orderNum, orderType] = this.options.order.split(':')
+      // 点同一个键
+      if (order === orderNum) {
+        // 判断是综合还是价格
+        if (order === '1') {
+          this.onComposite = !this.onComposite
+        } else {
+          this.onPrice = !this.onPrice
+        }
+        orderType = orderType === 'desc' ? 'asc' : 'desc'
+      }
+      // 点其他键
+      else {
+        // 每次点综合排序都保留之前的顺序
+        if (order === '1') {
+          orderType = this.onComposite ? 'desc' : 'asc'
+        }
+        // 每次点价格排序都是升序
+        else {
+          this.onPrice = true
+          orderType = 'asc'
+        }
+      }
+      this.options.order = `${order}:${orderType}`
+      this.updateProductList()
+    },
+    // 设置每页数据条数
+    handleSizeChange(pageSize) {
+      this.options.pageSize = pageSize
+      this.updateProductList()
+    },
+    // 设置当前页
+    handleCurrentChange(pageNo) {
+      this.updateProductList(pageNo)
     },
   },
   watch: {
@@ -340,11 +393,26 @@ export default {
               line-height: 18px;
 
               a {
+                height: 17px;
                 display: block;
                 cursor: pointer;
                 padding: 11px 15px;
                 color: #777;
                 text-decoration: none;
+                display: flex;
+                span {
+                  height: 20px;
+                  line-height: 10px;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: space-around;
+                  i {
+                    font-size: 12px;
+                    &.active {
+                      color: rgba(255, 255, 255, 0.5);
+                    }
+                  }
+                }
               }
 
               &.active {
