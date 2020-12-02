@@ -82,6 +82,13 @@ export default {
       this.$router.push(location) */
     },
   },
+  watch: {
+    $route() {
+      if (this.$route.path === '/') {
+        this.searchText = ''
+      }
+    },
+  },
   mounted() {
     this.$bus.$on('clearKeyword', () => {
       this.searchText = ''

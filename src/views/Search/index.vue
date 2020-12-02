@@ -12,16 +12,28 @@
           </ul>
           <ul class="fl sui-tag">
             <li class="with-x" v-show="options.categoryName">
-              {{ options.categoryName }}<i @click="clearCategoryName">×</i>
+              类名：{{ options.categoryName
+              }}<i @click="clearCategoryName">×</i>
             </li>
             <li class="with-x" v-show="options.keyword">
-              {{ options.keyword }}<i @click="clearKeyword">×</i>
+              关键字：{{ options.keyword }}<i @click="clearKeyword">×</i>
+            </li>
+            <li class="with-x" v-show="options.trademark">
+              品牌：{{ options.trademark.split(':')[1]
+              }}<i @click="clearTrademark">×</i>
+            </li>
+            <li
+              class="with-x"
+              v-for="(prop, index) in options.props"
+              :key="prop"
+            >
+              {{prop.split(":")[2]}}：{{ prop.split(":")[1] }}<i @click="clearProps(index)">×</i>
             </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector :addTrademark="addTrademark" :addProps="addProps" />
 
         <!--details-->
         <div class="details clearfix">
@@ -191,6 +203,26 @@ export default {
         name: 'search',
         query: this.$route.query,
       })
+    },
+    // 添加品牌
+    addTrademark(trademark) {
+      this.options.trademark = trademark
+      this.updateProductList()
+    },
+    // 删除标签
+    clearTrademark() {
+      this.options.trademark = ''
+      this.updateProductList()
+    },
+    // 添加品牌属性
+    addProps(attrValue) {
+      this.options.props.push(attrValue)
+      this.updateProductList()
+    },
+    // 删除标签属性
+    clearProps(index) {
+      this.options.props.splice(index, 1)
+      this.updateProductList()
     },
   },
   watch: {
