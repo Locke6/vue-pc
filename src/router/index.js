@@ -10,16 +10,17 @@ Vue.use(VueRouter);
 //重写$router的push方法,因为原生push会返回promise，如果重复调用push会报错
 const push = VueRouter.prototype.push
 VueRouter.prototype.push = function (location, onComplete, onAbort) {
-  if (location && onComplete && onAbort) {
+  if (onComplete || onAbort) {
     return push.call(this, location, onComplete, onAbort)
   }
+
   return push.call(this, location, onComplete, () => { })
 }
 
 //重写$router的replace方法
 const replace = VueRouter.prototype.replace
-Vue.prototype.replace = function (location, onComplete, onAbort) {
-  if (location && onComplete && onAbort) {
+VueRouter.prototype.replace = function (location, onComplete, onAbort) {
+  if (onComplete || onAbort) {
     return replace.call(this, location, onComplete, onAbort)
   }
   return replace.call(this, location, onComplete, () => { })

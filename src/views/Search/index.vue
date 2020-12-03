@@ -139,6 +139,7 @@
               :current-page="options.pageNo"
               :page-sizes="[5, 10, 15, 20]"
               :page-size="5"
+              :pager-count="5"
               layout="total, sizes, prev, pager, next, jumper"
               :total="total"
             >
@@ -182,8 +183,8 @@ export default {
   },
   methods: {
     ...mapActions(['getProductList']),
-    // 更新商品列表
-    updateProductList(pageNo) {
+    // 更新商品列表,加一个默认页码，当进行其他请求时例如点击商品分类，会跳转回第一页
+    updateProductList(pageNo = 1) {
       const { searchText: keyword } = this.$route.params
       const {
         categoryName,
