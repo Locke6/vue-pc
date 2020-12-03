@@ -73,7 +73,7 @@ export default {
 
 <style lang="less" scoped>
 .footer {
-  width: 1200px;
+  min-width: 1200px;
   background-color: #eaeaea;
 }
 .footerList {

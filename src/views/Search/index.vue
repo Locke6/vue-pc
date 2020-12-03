@@ -132,7 +132,8 @@
               </li>
             </ul>
           </div>
-          <div class="block">
+          <!-- 分页功能 -->
+          <!-- <div class="block">
             <el-pagination
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
@@ -144,6 +145,36 @@
               :total="total"
             >
             </el-pagination>
+          </div> -->
+
+          <div class="pagination">
+            <div class="pagination-container">
+              <span>共 {{ total }} 条</span>
+              <select @change="setPageSize" v-model="options.pageSize">
+                <option :value="5">5页/条</option>
+                <option :value="10">10页/条</option>
+                <option :value="15">15页/条</option>
+                <option :value="20">20页/条</option>
+              </select>
+              <div class="page">
+                <span @click="prePageNo">&lt;</span>
+                <ul @click="setPageNo">
+                  <li v-for="(item, index) in pageLength" :key="index">
+                    <a :data-pageNo="item">{{ item }}</a>
+                  </li>
+                </ul>
+                <span @click="nextPageNo">&gt;</span>
+              </div>
+              <div class="headTo">
+                <span>前往</span>
+                <input
+                  type="text"
+                  @keydown.enter="inputPageNo"
+                  v-model="textContent"
+                />
+                <span>页</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -172,6 +203,9 @@ export default {
       },
       onComposite: true,
       onPrice: true,
+      pageLength: [],
+      isSelected: false,
+      textContent: 1,
     }
   },
   components: {
@@ -179,7 +213,7 @@ export default {
     Category,
   },
   computed: {
-    ...mapGetters(['goodsList', 'total']),
+    ...mapGetters(['goodsList', 'total', 'pageSize', 'pageNo']),
   },
   methods: {
     ...mapActions(['getProductList']),
@@ -278,6 +312,51 @@ export default {
     handleCurrentChange(pageNo) {
       this.updateProductList(pageNo)
     },
+
+    // 自定义分页
+    //生成页码数
+    setPageNum() {
+      let arr = []
+      const num = Math.ceil(this.total / this.pageSize)
+      for (var i = 1; i <= num; i++) {
+        arr.push(i)
+      }
+      this.pageLength = arr
+    },
+    //设置页码数
+    setPageSize() {
+      this.updateProductList()
+    },
+    // 设置当前页
+    setPageNo(e) {
+      const { pageno } = e.target.dataset
+      // 如果不是点击a元素，退出
+      if (!pageno) return
+
+      // 设置当前页
+      this.updateProductList(+pageno)
+    },
+    // 前进一页
+    prePageNo() {
+      const pageNo = this.options.pageNo - 1
+      if (pageNo === 0) return
+      this.updateProductList(pageNo)
+    },
+    // 后退一页
+    nextPageNo() {
+      const pageNo = this.options.pageNo + 1
+      const totalPage = Math.ceil(this.total / this.pageSize)
+      if (pageNo > totalPage) return
+
+      this.updateProductList(pageNo)
+    },
+    // 输入页面跳转
+    inputPageNo() {
+      const pageNo = this.textContent
+      const totalPage = Math.ceil(this.total / this.pageSize)
+      if (pageNo < 0 || pageNo > totalPage) return
+      this.updateProductList(pageNo)
+    },
   },
   watch: {
     // 监视路径变化，请求列表数据
@@ -287,8 +366,20 @@ export default {
       },
       immediate: true,
     },
+    //每页条数发生变化，页码重新生成
+    pageSize() {
+      this.setPageNum()
+    },
+    //数据总条数发生变化，页码重新生成
+    total() {
+      this.setPageNum()
+    },
+    //监测页面变化，添加颜色
+    pageNo() {},
   },
-  mounted() {},
+  mounted() {
+    this.setPageNum()
+  },
 }
 </script>
 
@@ -550,89 +641,37 @@ export default {
         }
       }
 
-      .page {
-        width: 733px;
-        height: 66px;
-        overflow: hidden;
-        float: right;
-
-        .sui-pagination {
-          margin: 18px 0;
-
-          ul {
-            margin-left: 0;
-            margin-bottom: 0;
-            vertical-align: middle;
-            width: 490px;
-            float: left;
-
+      .pagination {
+        width: 1200px;
+        text-align: center;
+        font-size: 16px;
+        .pagination-container {
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          width: 500px;
+          margin: 0 auto;
+          .page {
+            display: flex;
+            ul {
+              display: flex;
+            }
             li {
-              line-height: 18px;
-              display: inline-block;
-
+              padding: 0 3px;
               a {
-                position: relative;
-                float: left;
-                line-height: 18px;
-                text-decoration: none;
-                background-color: #fff;
-                border: 1px solid #e0e9ee;
-                margin-left: -1px;
-                font-size: 14px;
-                padding: 9px 18px;
-                color: #333;
-              }
-
-              &.active {
-                a {
-                  background-color: #fff;
-                  color: #e1251b;
-                  border-color: #fff;
-                  cursor: default;
-                }
-              }
-
-              &.prev {
-                a {
-                  background-color: #fafafa;
-                }
-              }
-
-              &.disabled {
-                a {
-                  color: #999;
-                  cursor: default;
-                }
-              }
-
-              &.dotted {
-                span {
-                  margin-left: -1px;
-                  position: relative;
-                  float: left;
-                  line-height: 18px;
-                  text-decoration: none;
-                  background-color: #fff;
-                  font-size: 14px;
-                  border: 0;
-                  padding: 9px 18px;
-                  color: #333;
-                }
-              }
-
-              &.next {
-                a {
-                  background-color: #fafafa;
+                &.active {
+                  color: red;
                 }
               }
             }
           }
+          input {
+            width: 30px;
+          }
 
-          div {
-            color: #333;
-            font-size: 14px;
-            float: right;
-            width: 241px;
+          select,
+          input {
+            outline: none;
           }
         }
       }

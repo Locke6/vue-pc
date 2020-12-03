@@ -13,8 +13,14 @@ export default {
     goodsList (state) {
       return state.productList.goodsList
     },
-    total (state) { 
+    total (state) {
       return state.productList.total
+    },
+    pageSize (state) {
+      return state.productList.pageSize
+    },
+    pageNo (state) {
+      return state.productList.pageNo
     }
   },
   actions: {
