@@ -361,10 +361,11 @@ export default {
     },
     // 输入页面跳转
     inputPageNo() {
-      const pageNo = this.textContent
+      const pageNo = +this.textContent
       const totalPage = Math.ceil(this.total / this.pageSize)
       if (pageNo < 0 || pageNo > totalPage) return
-      this.updateProductList(pageNo)
+      this.markPage = pageNo
+      this.updateProductList(pageNo, this.markPage)
     },
   },
   watch: {
