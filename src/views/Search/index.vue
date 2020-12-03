@@ -160,7 +160,11 @@
                 <span @click="prePageNo">&lt;</span>
                 <ul @click="setPageNo">
                   <li v-for="(item, index) in pageLength" :key="index">
-                    <a :data-pageNo="item">{{ item }}</a>
+                    <a
+                      :data-pageNo="item"
+                      :class="{ active: markPage === item }"
+                      >{{ item }}</a
+                    >
                   </li>
                 </ul>
                 <span @click="nextPageNo">&gt;</span>
@@ -206,6 +210,7 @@ export default {
       pageLength: [],
       isSelected: false,
       textContent: 1,
+      markPage: 1,
     }
   },
   components: {
@@ -218,7 +223,7 @@ export default {
   methods: {
     ...mapActions(['getProductList']),
     // 更新商品列表,加一个默认页码，当进行其他请求时例如点击商品分类，会跳转回第一页
-    updateProductList(pageNo = 1) {
+    updateProductList(pageNo = 1, markPage = 1) {
       const { searchText: keyword } = this.$route.params
       const {
         categoryName,
@@ -235,6 +240,7 @@ export default {
         category1Id,
         pageNo,
       }
+      this.markPage = markPage
       this.options = options
       this.getProductList(options)
     },
@@ -334,21 +340,24 @@ export default {
       if (!pageno) return
 
       // 设置当前页
+
       this.updateProductList(+pageno)
+      this.markPage = +pageno
     },
     // 前进一页
     prePageNo() {
       const pageNo = this.options.pageNo - 1
       if (pageNo === 0) return
-      this.updateProductList(pageNo)
+      this.markPage -= 1
+      this.updateProductList(pageNo, this.markPage)
     },
     // 后退一页
     nextPageNo() {
       const pageNo = this.options.pageNo + 1
       const totalPage = Math.ceil(this.total / this.pageSize)
       if (pageNo > totalPage) return
-
-      this.updateProductList(pageNo)
+      this.markPage += 1
+      this.updateProductList(pageNo, this.markPage)
     },
     // 输入页面跳转
     inputPageNo() {
@@ -366,6 +375,7 @@ export default {
       },
       immediate: true,
     },
+
     //每页条数发生变化，页码重新生成
     pageSize() {
       this.setPageNum()
