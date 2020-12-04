@@ -18,6 +18,7 @@ instance.interceptors.response.use((res) => {
   NProgress.done()
   //状态码200，返回成功的响应数据
   if (res.data.code === 200) {
+    // console.log(res.data.data)
     return res.data.data
   }
   //状态码201，返回失败的promise

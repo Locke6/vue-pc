@@ -148,14 +148,47 @@
           </div> -->
 
           <!-- 手写分页器 -->
-          <Pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="options.pageNo"
-            :page-size="options.pageSize"
-            :pager-count="7"
-            :total="total"
-          />
+          <div class="pagination">
+            <div class="pagination-container">
+              <span>共 {{ total }} 条</span>
+              <select @change="setPageSize" v-model="options.pageSize">
+                <option :value="5">5页/条</option>
+                <option :value="10">10页/条</option>
+                <option :value="15">15页/条</option>
+                <option :value="20">20页/条</option>
+              </select>
+              <div class="page">
+                <span @click="prePageNo">上一页</span>
+                <ul @click="setPageNo">
+                  <li v-for="(item, index) in pageLength" :key="index">
+                    <!-- 隐藏显示a标签 -->
+                    <a
+                      :data-pageNo="item"
+                      :class="{ active: markPage === item }"
+                      v-if="
+                        item === 1 ||
+                        item === pageLength.length ||
+                        (markPage - item <= 2 && markPage - item >= 0) ||
+                        (item - markPage <= 2 && item - markPage >= 0)
+                      "
+                      >{{ item }}</a
+                    >
+                  </li>
+                </ul>
+                <span @click="nextPageNo">下一页</span>
+              </div>
+              <div class="headTo">
+                <span>前往</span>
+                <input
+                  type="text"
+                  @keydown.enter="inputPageNo"
+                  v-model="textContent"
+                />
+                <span>页</span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -165,7 +198,7 @@
 <script>
 import SearchSelector from './SearchSelector/SearchSelector'
 import Category from '@comps/Category'
-import Pagination from '@comps/Pagination'
+
 import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'Search',
@@ -183,20 +216,23 @@ export default {
       },
       onComposite: true,
       onPrice: true,
+      pageLength: [],
+      isSelected: false,
+      textContent: 1,
+      markPage: 1,
     }
   },
   components: {
     SearchSelector,
     Category,
-    Pagination,
   },
   computed: {
-    ...mapGetters(['goodsList', 'total']),
+    ...mapGetters(['goodsList', 'total', 'pageSize', 'pageNo']),
   },
   methods: {
     ...mapActions(['getProductList']),
     // 更新商品列表,加一个默认页码，当进行其他请求时例如点击商品分类，会跳转回第一页
-    updateProductList(pageNo = 1) {
+    updateProductList(pageNo = 1, markPage = 1) {
       const { searchText: keyword } = this.$route.params
       const {
         categoryName,
@@ -213,6 +249,7 @@ export default {
         category1Id,
         pageNo,
       }
+      this.markPage = markPage
       this.options = options
       this.getProductList(options)
     },
@@ -292,6 +329,55 @@ export default {
     handleCurrentChange(pageNo) {
       this.updateProductList(pageNo)
     },
+
+    // 自定义分页
+    //生成页码数
+    setPageNum() {
+      let arr = []
+      const num = Math.ceil(this.total / this.pageSize)
+      for (var i = 1; i <= num; i++) {
+        arr.push(i)
+      }
+      this.pageLength = arr
+    },
+    //设置页码数
+    setPageSize() {
+      this.updateProductList()
+    },
+    // 设置当前页
+    setPageNo(e) {
+      const { pageno } = e.target.dataset
+      // 如果不是点击a元素，退出
+      if (!pageno) return
+
+      // 设置当前页
+
+      this.updateProductList(+pageno)
+      this.markPage = +pageno
+    },
+    // 前进一页
+    prePageNo() {
+      const pageNo = this.options.pageNo - 1
+      if (pageNo === 0) return
+      this.markPage -= 1
+      this.updateProductList(pageNo, this.markPage)
+    },
+    // 后退一页
+    nextPageNo() {
+      const pageNo = this.options.pageNo + 1
+      const totalPage = Math.ceil(this.total / this.pageSize)
+      if (pageNo > totalPage) return
+      this.markPage += 1
+      this.updateProductList(pageNo, this.markPage)
+    },
+    // 输入页面跳转
+    inputPageNo() {
+      const pageNo = +this.textContent
+      const totalPage = Math.ceil(this.total / this.pageSize)
+      if (pageNo < 0 || pageNo > totalPage) return
+      this.markPage = pageNo
+      this.updateProductList(pageNo, this.markPage)
+    },
   },
   watch: {
     // 监视路径变化，请求列表数据
@@ -301,8 +387,21 @@ export default {
       },
       immediate: true,
     },
+
+    //每页条数发生变化，页码重新生成
+    pageSize() {
+      this.setPageNum()
+    },
+    //数据总条数发生变化，页码重新生成
+    total() {
+      this.setPageNum()
+    },
+    //监测页面变化，添加颜色
+    pageNo() {},
   },
-  mounted() {},
+  mounted() {
+    this.setPageNum()
+  },
 }
 </script>
 
@@ -560,6 +659,63 @@ export default {
                 }
               }
             }
+          }
+        }
+      }
+
+      .pagination {
+        width: 1200px;
+        text-align: center;
+        font-size: 16px;
+        .pagination-container {
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          width: 700px;
+          margin: 0 auto;
+          span {
+            width: 70px;
+          }
+          .page {
+            display: flex;
+            span {
+              display: inline-block;
+              width: 50px;
+              cursor: pointer;
+              background-color: #eaeaea;
+            }
+            ul {
+              display: flex;
+              width: 200px;
+              justify-content: space-around;
+            }
+            li {
+              padding: 0 3px;
+
+              a {
+                display: inline-block;
+                background-color: #eaeaea;
+                width: 20px;
+                &.active {
+                  color: red;
+                }
+              }
+            }
+          }
+          .headTo {
+            display: flex;
+            align-items: center;
+            span {
+              width: 40px;
+            }
+          }
+          input {
+            width: 30px;
+          }
+
+          select,
+          input {
+            outline: none;
           }
         }
       }
