@@ -1,20 +1,50 @@
 <template>
-  <div class="spec-preview" @mousemove="maskMove">
+  <div class="spec-preview" @mousemove="maskMove" ref="preview">
     <img src="../images/s1.png" />
     <div class="event"></div>
     <div class="big">
       <img src="../images/s1.png" />
     </div>
-    <div class="mask"></div>
+    <div
+      class="mask"
+      :style="{ left: left + 'px', top: top + 'px' }"
+      ref="mask"
+    ></div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Zoom',
+  data() {
+    return {
+      left: 0,
+      top: 0,
+    }
+  },
   methods: {
+    // 移动蒙版
     maskMove(e) {
-      console.log(e.clientX, e.clientY)
+      let maskLeft = e.offsetX - this.$refs.mask.offsetWidth / 2
+      let maskTop = e.offsetY - this.$refs.mask.offsetHeight / 2
+      const maxLeft =
+        this.$refs.preview.clientWidth - this.$refs.mask.offsetWidth
+      const maxTop =
+        this.$refs.preview.clientHeight - this.$refs.mask.offsetHeight
+      if (maskLeft <= 0) {
+        maskLeft = 0
+      }
+      if (maskLeft >= maxLeft) {
+        maskLeft = maxLeft
+      }
+      if (maskTop <= 0) {
+        maskTop = 0
+      }
+      if (maskTop >= maxTop) {
+        maskTop = maxTop
+      }
+      this.left = maskLeft
+      this.top = maskTop
     },
   },
 }
