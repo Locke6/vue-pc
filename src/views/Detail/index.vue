@@ -79,9 +79,10 @@
                 <dt class="title">{{ spuSaleAttr.saleAttrName }}</dt>
                 <dd
                   changepirce="0"
-                  class="active"
+                  :class="{ active: attrValue === spuSaleAttrValue.id }"
                   v-for="spuSaleAttrValue in spuSaleAttr.spuSaleAttrValueList"
                   :key="spuSaleAttrValue.id"
+                  @click="setAttrValue(spuSaleAttrValue.id)"
                 >
                   {{ spuSaleAttrValue.saleAttrValueName }}
                 </dd>
@@ -334,15 +335,16 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-
+import Category from '@comps/Category'
 import ImageList from './ImageList/ImageList'
 import Zoom from './Zoom/Zoom'
-
-import Category from '@comps/Category'
-
 export default {
   name: 'Detail',
-
+  data() {
+    return {
+      attrValue: '',
+    }
+  },
   components: {
     ImageList,
     Zoom,
@@ -353,6 +355,10 @@ export default {
   },
   methods: {
     ...mapActions(['getProductInfos']),
+    // 选取属性
+    setAttrValue(id) {
+      this.attrValue = id
+    },
   },
   mounted() {
     this.getProductInfos(this.$route.params.id)
