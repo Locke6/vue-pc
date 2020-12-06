@@ -13,6 +13,8 @@ Vue.config.productionTip = false;
 
 //引入字体图标
 import './styles/iconfont.css'
+// 引入轮播图样式
+import 'swiper/swiper-bundle.min.css'
 new Vue({
   beforeCreate () {
     Vue.prototype.$bus = this

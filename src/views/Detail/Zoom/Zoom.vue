@@ -1,9 +1,12 @@
 <template>
   <div class="spec-preview" @mousemove="maskMove" ref="preview">
-    <img src="../images/s1.png" />
+    <img :src="skuImage" />
     <div class="event"></div>
     <div class="big">
-      <img src="../images/s1.png" />
+      <img
+        :src="skuImage"
+        :style="{ left: imgLeft + 'px', top: imgTop + 'px' }"
+      />
     </div>
     <div
       class="mask"
@@ -20,7 +23,12 @@ export default {
     return {
       left: 0,
       top: 0,
+      imgLeft: 0,
+      imgTop: 0,
     }
+  },
+  props: {
+    skuImage: String,
   },
   methods: {
     // 移动蒙版
@@ -34,17 +42,19 @@ export default {
       if (maskLeft <= 0) {
         maskLeft = 0
       }
-      if (maskLeft >= maxLeft) {
+      if (maskLeft > maxLeft) {
         maskLeft = maxLeft
       }
       if (maskTop <= 0) {
         maskTop = 0
       }
-      if (maskTop >= maxTop) {
+      if (maskTop > maxTop) {
         maskTop = maxTop
       }
       this.left = maskLeft
       this.top = maskTop
+      this.imgLeft = -2 * maskLeft
+      this.imgTop = -2 * maskTop
     },
   },
 }
@@ -61,7 +71,7 @@ export default {
     width: 100%;
     height: 100%;
   }
-
+  // 处理闪现，定义一个兄弟元素，将其层级设置为最高，宽度和高度与父级相等，鼠标移入时最近定位元素就是此元素
   .event {
     width: 100%;
     height: 100%;

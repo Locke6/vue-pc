@@ -16,9 +16,18 @@
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
           <!--放大镜效果-->
-          <Zoom />
+          <Zoom
+            :skuImage="
+              skuInfo.skuImageList &&
+              skuInfo.skuImageList[currentIndex] &&
+              skuInfo.skuImageList[currentIndex].imgUrl
+            "
+          />
           <!-- 小图列表 -->
-          <ImageList />
+          <ImageList
+            :skuImageList="skuInfo.skuImageList"
+            :getImgIndex="getImgIndex"
+          />
         </div>
         <!-- 右侧选择区域布局 -->
         <div class="InfoWrap">
@@ -79,22 +88,27 @@
                 <dt class="title">{{ spuSaleAttr.saleAttrName }}</dt>
                 <dd
                   changepirce="0"
-                  :class="{ active: attrValue === spuSaleAttrValue.id }"
+                  :class="{
+                    active: list[spuSaleAttr.id] === spuSaleAttrValue.id,
+                  }"
                   v-for="spuSaleAttrValue in spuSaleAttr.spuSaleAttrValueList"
                   :key="spuSaleAttrValue.id"
-                  @click="setAttrValue(spuSaleAttrValue.id)"
+                  @click="setAttrValue(spuSaleAttr.id, spuSaleAttrValue.id)"
                 >
                   {{ spuSaleAttrValue.saleAttrValueName }}
                 </dd>
               </dl>
             </div>
             <div class="cartWrap">
-              <div class="controls">
-                <input autocomplete="off" class="itxt" />
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+              <div class="changeCount">
+                <el-input-number
+                  v-model="skuNum"
+                  controls-position="right"
+                  :min="1"
+                  :max="10"
+                ></el-input-number>
               </div>
-              <div class="add">
+              <div class="add" @click="add">
                 <a href="javascript:">加入购物车</a>
               </div>
             </div>
@@ -342,7 +356,9 @@ export default {
   name: 'Detail',
   data() {
     return {
-      attrValue: '',
+      list: {},
+      currentIndex: 0,
+      skuNum: 1,
     }
   },
   components: {
@@ -355,9 +371,21 @@ export default {
   },
   methods: {
     ...mapActions(['getProductInfos']),
-    // 选取属性
-    setAttrValue(id) {
-      this.attrValue = id
+    // 被选中属性高亮
+    setAttrValue(listValue, attrValue) {
+      this.$set(this.list, listValue, attrValue)
+      // console.log(listValue,attrValue,this.list)
+    },
+
+    // 获取点击图片下标
+    getImgIndex(index) {
+      this.currentIndex = index
+      console.log(index)
+    },
+
+    // 跳转到添加购物车成功页面
+    add() {
+      this.$router.push(`/addcartsuccess/?skuNum=${this.skuNum}`)
     },
   },
   mounted() {
@@ -529,46 +557,12 @@ export default {
           }
 
           .cartWrap {
-            .controls {
-              width: 48px;
-              position: relative;
+            .changeCount {
               float: left;
-              margin-right: 15px;
-
-              .itxt {
-                width: 38px;
-                height: 37px;
-                border: 1px solid #ddd;
-                color: #555;
-                float: left;
-                border-right: 0;
-                text-align: center;
-              }
-
-              .plus,
-              .mins {
-                width: 15px;
-                text-align: center;
-                height: 17px;
-                line-height: 17px;
-                background: #f1f1f1;
-                color: #666;
-                position: absolute;
-                right: -8px;
-                border: 1px solid #ccc;
-              }
-
-              .mins {
-                right: -8px;
-                top: 19px;
-                border-top: 0;
-              }
-
-              .plus {
-                right: -8px;
+              .el-input-number {
+                width: 100px;
               }
             }
-
             .add {
               float: left;
 
@@ -577,7 +571,7 @@ export default {
                 padding: 0 25px;
                 font-size: 16px;
                 color: #fff;
-                height: 36px;
+                height: 40px;
                 line-height: 36px;
                 display: block;
               }

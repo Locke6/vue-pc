@@ -21,7 +21,7 @@
 <script>
 //swiper轮播插件
 import Swiper, { Pagination, Navigation, Autoplay } from 'swiper'
-import 'swiper/swiper-bundle.min.css'
+
 Swiper.use([Pagination, Navigation, Autoplay])
 
 export default {

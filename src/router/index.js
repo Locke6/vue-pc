@@ -6,6 +6,8 @@ import Search from "../views/Search";
 import Login from "../views/Login";
 import Register from "../views/Register";
 import Detail from "@views/Detail"
+import AddCartSuccess from "@views/AddCartSuccess"
+import ShopCart from "@views/ShopCart"
 Vue.use(VueRouter);
 // console.log(new VueRouter)
 //重写$router的push方法,因为原生push会返回promise，如果重复调用push会报错
@@ -58,7 +60,16 @@ export default new VueRouter({
       path: "/detail/:id",
       component: Detail
     },
-
+    {
+      name: 'shopcart',
+      path: "/shopcart",
+      component: ShopCart
+    },
+    {
+      name: 'addcartsuccess',
+      path: "/addcartsuccess",
+      component: AddCartSuccess
+    },
   ],
   // 每次切换路由页面滚动条位置
   scrollBehavior () {
