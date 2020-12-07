@@ -17,7 +17,12 @@
           :key="shopCart.skuId"
         >
           <li class="cart-list-con1">
-            <input type="checkbox" name="chk_list" />
+            <input
+              type="checkbox"
+              name="chk_list"
+              :checked="shopCart.isChecked"
+              @click="changeIsChecked(shopCart.skuId, shopCart.isChecked)"
+            />
           </li>
           <li class="cart-list-con2">
             <img :src="shopCart.imgUrl" />
@@ -32,18 +37,25 @@
             <span class="price">{{ shopCart.skuPrice }}</span>
           </li>
           <li class="cart-list-con5">
-            <a href="javascript:void(0)" class="mins">-</a>
+            <button
+              class="mins"
+              @click="changeCount(shopCart.skuId, -1, shopCart.skuNum)"
+            >
+              -
+            </button>
             <input
               autocomplete="off"
               type="text"
-              value="1"
+              :value="shopCart.skuNum"
               minnum="1"
               class="itxt"
             />
-            <a href="javascript:void(0)" class="plus">+</a>
+            <button class="plus" @click="changeCount(shopCart.skuId, 1)">
+              +
+            </button>
           </li>
           <li class="cart-list-con6">
-            <span class="sum">399</span>
+            <span class="sum">{{ shopCart.skuPrice * shopCart.skuNum }}</span>
           </li>
           <li class="cart-list-con7">
             <a href="#none" class="sindelet" @click="delCart(shopCart.skuId)"
@@ -57,7 +69,7 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" />
+        <input class="chooseAll" type="checkbox" v-model="allChecked" />
         <span>全选</span>
       </div>
       <div class="option">
@@ -66,10 +78,13 @@
         <a href="#none">清除下柜商品</a>
       </div>
       <div class="money-box">
-        <div class="chosed">已选择 <span>0</span>件商品</div>
+        <div class="chosed">
+          已选择 <span>{{ checkedNum }}</span
+          >件商品
+        </div>
         <div class="sumprice">
           <em>总价（不含运费） ：</em>
-          <i class="summoney">0</i>
+          <i class="summoney">{{ totalPrice }}</i>
         </div>
         <div class="sumbtn">
           <a class="sum-btn" href="###" target="_blank">结算</a>
@@ -87,12 +102,71 @@ export default {
     ...mapState({
       shopCartList: (state) => state.shopcart.shopCartList,
     }),
+
+    // 全选
+    allChecked: {
+      get() {
+        return this.shopCartList.every((shopCart) => shopCart.isChecked === 1)
+      },
+      set(newVal) {
+        console.log(newVal)
+        if (newVal) {
+          this.shopCartList.forEach((shopCart) => {
+            if (shopCart.isChecked === 0) {
+              this.changeIsChecked(shopCart.skuId, shopCart.isChecked)
+            }
+          })
+        } else {
+          this.shopCartList.forEach((shopCart) => {
+            if (shopCart.isChecked === 1) {
+              this.changeIsChecked(shopCart.skuId, shopCart.isChecked)
+            }
+          })
+        }
+      },
+    },
+    // 选中商品数
+    checkedNum() {
+      return this.shopCartList.reduce((p, c) => {
+        if (c.isChecked === 0) return p
+        return p + c.skuNum
+      }, 0)
+    },
+    // 总价
+    totalPrice() {
+      return this.shopCartList.reduce((p, c) => {
+        if (c.isChecked === 0) return p
+        return p + c.skuNum * c.skuPrice
+      }, 0)
+    },
   },
   methods: {
-    ...mapActions(['getShopCartList', 'delShopCart']),
+    ...mapActions([
+      'getShopCartList',
+      'delShopCart',
+      'updateCartCount',
+      'switchIsChecked',
+    ]),
+    // 删除商品
     async delCart(skuId) {
       await this.delShopCart(skuId)
       this.getShopCartList()
+    },
+
+    // 更改数量
+    changeCount(skuId, skuNum, limitNum) {
+      if (limitNum <= 1) {
+        this.$message('该宝贝不能再减少啦~')
+        return
+      }
+      this.updateCartCount({ skuId, skuNum })
+    },
+
+    // 切换商品状态
+    changeIsChecked(skuId, lastChecked) {
+      const isChecked = lastChecked === 1 ? 0 : 1
+      // console.log(skuId, isChecked)
+      this.switchIsChecked({ skuId, isChecked })
     },
   },
   mounted() {

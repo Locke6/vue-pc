@@ -1,4 +1,4 @@
-import { reqUpdateCartCount, reqGetShopCartList, reqDelShopCart } from '@api/shopcart'
+import { reqUpdateCartCount, reqGetShopCartList, reqDelShopCart, reqSwitchIsChecked } from '@api/shopcart'
 export default {
   state: {
     shopCartList: [],
@@ -8,11 +8,11 @@ export default {
   },
   actions: {
     // 添加到购物车,修改数量
-    async updateCartCount ({ commit }, { skuID, skuNum }) {
+    async updateCartCount ({ commit }, { skuId, skuNum }) {
       // 修改服务器中的商品数量
-      await reqUpdateCartCount(skuID, skuNum)
+      await reqUpdateCartCount(skuId, skuNum)
       // 修改vuex中的商品数量，由于是响应式会动态修改
-      commit('UPDATE_CARTCOUNT', { skuID, skuNum })
+      commit('UPDATE_CARTCOUNT', { skuId, skuNum })
     },
 
     //获取购物车列表
@@ -22,15 +22,21 @@ export default {
     },
 
     // 删除购物车商品
-    async delShopCart ({ commit },skuID) {
-      await reqDelShopCart(skuID)
+    async delShopCart ({ commit }, skuId) {
+      await reqDelShopCart(skuId)
       console.log(commit)
+    },
+
+    // 切换商品选中状态
+    async switchIsChecked ({ commit }, { skuId, isChecked }) {
+      await reqSwitchIsChecked(skuId, isChecked)
+      commit('SWITCH_ISCHECKED', { skuId, isChecked })
     },
   },
   mutations: {
-    UPDATE_CARTCOUNT (state, { skuID, skuNum }) {
-      state.shopCartList = state.shopCartList.forEach(shopCart => {
-        if (shopCart.skuID === skuID) {
+    UPDATE_CARTCOUNT (state, { skuId, skuNum }) {
+      state.shopCartList.forEach(shopCart => {
+        if (shopCart.skuId === skuId) {
           shopCart.skuNum += skuNum
         }
       })
@@ -48,6 +54,14 @@ export default {
         skuNum
       }
       state.cartInfo = cartInfo
+    },
+
+    SWITCH_ISCHECKED (state, { skuId, isChecked }) {
+      state.shopCartList.forEach(shopCart => {
+        if (shopCart.skuId === skuId) {
+          shopCart.isChecked = isChecked
+        }
+      })
     }
   }
 }

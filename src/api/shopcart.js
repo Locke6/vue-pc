@@ -23,3 +23,11 @@ export const reqDelShopCart = function (skuId) {
     url: `/cart/deleteCart/${skuId}`,
   })
 }
+
+// 切换商品选中状态
+export const reqSwitchIsChecked = function (skuId, isChecked) {
+  return request({
+    method: "GET",
+    url: `/cart/checkCart/${skuId}/${isChecked}`,
+  })
+}

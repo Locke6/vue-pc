@@ -399,13 +399,13 @@ export default {
     // 跳转到添加购物车成功页面
     async add(skuName, skuImg) {
       try {
-        await this.updateCartCount({
-          skuID: this.skuInfo.id,
-          skuNum: this.skuNum,
-        })
         this.UPDATE_CARTINFO({
           skuName,
           skuImg,
+          skuNum: this.skuNum,
+        })
+        await this.updateCartCount({
+          skuId: this.skuInfo.id,
           skuNum: this.skuNum,
         })
         this.$router.push(`/addcartsuccess/?skuNum=${this.skuNum}`)
