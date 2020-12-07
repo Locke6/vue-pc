@@ -28,9 +28,9 @@ instance.interceptors.response.use((res) => {
     return res.data.data
   }
   //状态码201，返回失败的promise
-  const { message } = res.data
-  Message.error(message)
-  return Promise.reject(message)
+  const { data } = res.data
+  Message.error(data)
+  return Promise.reject(data)
 
 }, (err) => {
   // 响应失败：当响应状态码不是 2xx

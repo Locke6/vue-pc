@@ -1,5 +1,6 @@
 import request from '@utils/request'
-function reqLogin (phone, password) {
+// 登录
+export const reqLogin = function (phone, password) {
   return request({
     method: "POST",
     url: "/user/passport/login",
@@ -9,4 +10,15 @@ function reqLogin (phone, password) {
     }
   })
 }
-export default reqLogin
+// 注册
+export const reqRegister = function ({ phone, password, code }) {
+  return request({
+    method: "POST",
+    url: "/user/passport/register",
+    data: {
+      phone,
+      password,
+      code
+    }
+  })
+}
