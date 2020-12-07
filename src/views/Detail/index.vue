@@ -89,9 +89,13 @@
                 <dd
                   changepirce="0"
                   :class="{
-                    active: list[spuSaleAttr.id] === spuSaleAttrValue.id,
+                    active: list[spuSaleAttr.id]
+                      ? list[spuSaleAttr.id] === spuSaleAttrValue.id
+                      : index === 0,
                   }"
-                  v-for="spuSaleAttrValue in spuSaleAttr.spuSaleAttrValueList"
+                  v-for="(
+                    spuSaleAttrValue, index
+                  ) in spuSaleAttr.spuSaleAttrValueList"
                   :key="spuSaleAttrValue.id"
                   @click="setAttrValue(spuSaleAttr.id, spuSaleAttrValue.id)"
                 >
@@ -108,7 +112,15 @@
                   :max="10"
                 ></el-input-number>
               </div>
-              <div class="add" @click="add">
+              <div
+                class="add"
+                @click="
+                  add(
+                    skuInfo.skuName,
+                    skuInfo.skuImageList[currentIndex].imgUrl
+                  )
+                "
+              >
                 <a href="javascript:">加入购物车</a>
               </div>
             </div>
@@ -348,7 +360,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import Category from '@comps/Category'
 import ImageList from './ImageList/ImageList'
 import Zoom from './Zoom/Zoom'
@@ -370,7 +382,8 @@ export default {
     ...mapGetters(['categoryView', 'spuSaleAttrList', 'skuInfo']),
   },
   methods: {
-    ...mapActions(['getProductInfos']),
+    ...mapActions(['getProductInfos', 'updateCartCount']),
+    ...mapMutations(['UPDATE_CARTINFO']),
     // 被选中属性高亮
     setAttrValue(listValue, attrValue) {
       this.$set(this.list, listValue, attrValue)
@@ -384,8 +397,21 @@ export default {
     },
 
     // 跳转到添加购物车成功页面
-    add() {
-      this.$router.push(`/addcartsuccess/?skuNum=${this.skuNum}`)
+    async add(skuName, skuImg) {
+      try {
+        await this.updateCartCount({
+          skuID: this.skuInfo.id,
+          skuNum: this.skuNum,
+        })
+        this.UPDATE_CARTINFO({
+          skuName,
+          skuImg,
+          skuNum: this.skuNum,
+        })
+        this.$router.push(`/addcartsuccess/?skuNum=${this.skuNum}`)
+      } catch (error) {
+        this.$message.error(error)
+      }
     },
   },
   mounted() {

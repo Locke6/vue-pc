@@ -3,14 +3,20 @@ import axios from 'axios'
 import NProgress from 'nprogress'
 import "nprogress/nprogress.css";
 import { Message } from 'element-ui'
-
+import getUserTempId from './getUserTempId'
 const instance = axios.create({
   baseURL: "http://182.92.128.115/api",
   headers: {}
 })
+
+// 变量接收下userTempId是在内存中进行，性能好
+// 如果直接在拦截器中给localStorage保存数据，是在磁盘中进行的，性能不好
+const userTempId = getUserTempId()
+
 //请求拦截器，初始化默认返回成功promise
 instance.interceptors.request.use((config) => {
   NProgress.start()
+  config.headers.userTempId = userTempId
   return config
 })
 //响应拦截器
