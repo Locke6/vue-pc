@@ -32,6 +32,7 @@ export default {
       await reqSwitchIsChecked(skuId, isChecked)
       commit('SWITCH_ISCHECKED', { skuId, isChecked })
     },
+
   },
   mutations: {
     UPDATE_CARTCOUNT (state, { skuId, skuNum }) {

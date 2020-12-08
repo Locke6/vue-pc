@@ -4,7 +4,11 @@
       <div class="header-container">
         <div class="header-loginlist">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <p v-if="token">
+            <span>{{ name }} </span>
+            <a href="#" @click="delToken">退出</a>
+          </p>
+          <p v-else>
             <span>请</span><router-link to="/login">登录</router-link>
             <router-link to="/register">免费注册</router-link>
           </p>
@@ -36,12 +40,19 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'Header',
   data() {
     return {
       searchText: '',
     }
+  },
+  computed: {
+    ...mapState({
+      token: (state) => state.user.token,
+      name: (state) => state.user.name,
+    }),
   },
   methods: {
     search() {
@@ -80,6 +91,12 @@ export default {
         },
       }
       this.$router.push(location) */
+    },
+    delToken() {
+      localStorage.removeItem('token')
+      localStorage.removeItem('name')
+      this.$router.replace('/')
+      this.$store.commit('LOGIN_OUT')
     },
   },
   watch: {

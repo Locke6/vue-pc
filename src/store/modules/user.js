@@ -1,7 +1,10 @@
 import { reqLogin, reqRegister } from '@api/user'
 
 export default {
-  state: {},
+  state: {
+    token: localStorage.getItem('token') || '',
+    name: localStorage.getItem('name') || ''
+  },
   getter: {},
   actions: {
     // 注册函数
@@ -11,10 +14,24 @@ export default {
     },
 
     //  登录函数
-    async login ({ commit }, { phone, password}) {
-      await reqLogin({ phone, password})
-      console.log(commit)
+    async login ({ commit }, { phone, password }) {
+      const user = await reqLogin(phone, password)
+      commit('ADD_LOGIN_INFO', user)
     }
+
+
+
   },
-  mutations: {}
+  mutations: {
+    ADD_LOGIN_INFO (state, user) {
+      state.token = user.token
+      state.name = user.name
+    },
+
+    // 退出登录
+    LOGIN_OUT (state) {
+      state.token = ''
+      state.name = ''
+    }
+  }
 }

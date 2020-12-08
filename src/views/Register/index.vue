@@ -21,7 +21,7 @@
       </div>
       <div class="content">
         <label>验证码:</label>
-        <ValidationProvider rules="requiredCode" v-slot="{ errors }">
+        <ValidationProvider rules="requiredCode|codeLength" v-slot="{ errors }">
           <input type="text" placeholder="请输入验证码" v-model="user.code" />
           <img
             ref="code"
@@ -97,8 +97,13 @@ extend('length', {
 })
 extend('requiredCode', {
   ...required,
-  // 错误提示
   message: '验证码不能为空',
+})
+extend('codeLength', {
+  validate(value) {
+    return value.length === 4
+  },
+  message: '验证码格式错误',
 })
 export default {
   name: 'Register',
@@ -128,10 +133,11 @@ export default {
           this.$message.error('请阅读并同意协议')
           return
         }
-        if (password !== rePassword) {
-          this.$message.error('密码不一致，请检查密码')
-          return
-        }
+        if (code)
+          if (password !== rePassword) {
+            this.$message.error('密码不一致，请检查密码')
+            return
+          }
         await this.$store.dispatch('register', { phone, password, code })
         this.$router.push('/login')
       } catch {

@@ -4,6 +4,8 @@ import NProgress from 'nprogress'
 import "nprogress/nprogress.css";
 import { Message } from 'element-ui'
 import getUserTempId from './getUserTempId'
+import store from '@store/'
+
 const instance = axios.create({
   baseURL: "http://182.92.128.115/api",
   headers: {}
@@ -16,6 +18,10 @@ const userTempId = getUserTempId()
 //请求拦截器，初始化默认返回成功promise
 instance.interceptors.request.use((config) => {
   NProgress.start()
+  const token = store.state.user.token
+  if (token) {
+    config.headers.token = token
+  }
   config.headers.userTempId = userTempId
   return config
 })
@@ -28,9 +34,9 @@ instance.interceptors.response.use((res) => {
     return res.data.data
   }
   //状态码201，返回失败的promise
-  const { data } = res.data
-  Message.error(data)
-  return Promise.reject(data)
+  const message = res.data.data || res.data.message
+  Message.error(message)
+  return Promise.reject(message)
 
 }, (err) => {
   // 响应失败：当响应状态码不是 2xx
