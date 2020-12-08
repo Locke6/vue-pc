@@ -5,6 +5,9 @@ export default {
     cartInfo: {}
   },
   getters: {
+    Attrkeys (state) {
+      return Object.keys(state.cartInfo.skuAttrs)
+    }
   },
   actions: {
     // 添加到购物车,修改数量
@@ -48,11 +51,12 @@ export default {
     },
 
     // 添加数据到购物车成功页面
-    UPDATE_CARTINFO (state, { skuName, skuImg, skuNum }) {
+    UPDATE_CARTINFO (state, { skuName, skuImg, skuNum, skuAttrs }) {
       const cartInfo = {
         skuName,
         skuImg,
-        skuNum
+        skuNum,
+        skuAttrs
       }
       state.cartInfo = cartInfo
     },

@@ -89,15 +89,18 @@
                 <dd
                   changepirce="0"
                   :class="{
-                    active: list[spuSaleAttr.id]
-                      ? list[spuSaleAttr.id] === spuSaleAttrValue.id
-                      : index === 0,
+                    active:
+                      skuAttrs[spuSaleAttr.saleAttrName] ===
+                      spuSaleAttrValue.saleAttrValueName,
                   }"
-                  v-for="(
-                    spuSaleAttrValue, index
-                  ) in spuSaleAttr.spuSaleAttrValueList"
+                  v-for="spuSaleAttrValue in spuSaleAttr.spuSaleAttrValueList"
                   :key="spuSaleAttrValue.id"
-                  @click="setAttrValue(spuSaleAttr.id, spuSaleAttrValue.id)"
+                  @click="
+                    setAttrValue(
+                      spuSaleAttr.saleAttrName,
+                      spuSaleAttrValue.saleAttrValueName
+                    )
+                  "
                 >
                   {{ spuSaleAttrValue.saleAttrValueName }}
                 </dd>
@@ -117,7 +120,8 @@
                 @click="
                   add(
                     skuInfo.skuName,
-                    skuInfo.skuImageList[currentIndex].imgUrl
+                    skuInfo.skuImageList[currentIndex].imgUrl,
+                    skuAttrs
                   )
                 "
               >
@@ -368,7 +372,7 @@ export default {
   name: 'Detail',
   data() {
     return {
-      list: {},
+      skuAttrs: {},
       currentIndex: 0,
       skuNum: 1,
     }
@@ -384,9 +388,10 @@ export default {
   methods: {
     ...mapActions(['getProductInfos', 'updateCartCount']),
     ...mapMutations(['UPDATE_CARTINFO']),
+
     // 被选中属性高亮
     setAttrValue(listValue, attrValue) {
-      this.$set(this.list, listValue, attrValue)
+      this.skuAttrs[listValue] = attrValue
       // console.log(listValue,attrValue,this.list)
     },
 
@@ -397,12 +402,13 @@ export default {
     },
 
     // 跳转到添加购物车成功页面
-    async add(skuName, skuImg) {
+    async add(skuName, skuImg, skuAttrs) {
       try {
         this.UPDATE_CARTINFO({
           skuName,
           skuImg,
           skuNum: this.skuNum,
+          skuAttrs,
         })
         await this.updateCartCount({
           skuId: this.skuInfo.id,
@@ -414,8 +420,17 @@ export default {
       }
     },
   },
-  mounted() {
-    this.getProductInfos(this.$route.params.id)
+  async mounted() {
+    // await this.getProductInfos(this.$route.params.id)
+    await this.getProductInfos(this.$route.params.id)
+    this.spuSaleAttrList.forEach((SaleAttr) => {
+      const { saleAttrName, spuSaleAttrValueList } = SaleAttr
+      this.$set(
+        this.skuAttrs,
+        saleAttrName,
+        spuSaleAttrValueList[0].saleAttrValueName
+      )
+    })
   },
 }
 </script>

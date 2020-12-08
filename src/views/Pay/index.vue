@@ -111,6 +111,7 @@ export default {
               cancelButtonText: '支付中遇到了问题',
               center: true, //居中
               dangerouslyUseHTMLString: true, //使用 HTML 片段
+              showClose:false //隐藏关闭按钮
             }
           )
             .then(() => {

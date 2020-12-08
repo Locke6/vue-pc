@@ -12,7 +12,7 @@
               {{ cartInfo.skuName }}
             </p>
             <p class="attr">
-              颜色：WFZ5099IH/5L钛金釜内胆 数量：{{ cartInfo.skuNum }}
+              <span v-for="(Attr,index) in Attrkeys" :key="index">{{Attr}}:{{cartInfo.skuAttrs[Attr]}}&nbsp;&nbsp;&nbsp;</span> 数量：{{ cartInfo.skuNum }}
             </p>
           </div>
         </div>
@@ -26,13 +26,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState,mapGetters } from 'vuex'
 export default {
   name: 'AddCartSuccess',
   computed: {
     ...mapState({
       cartInfo: (state) => state.shopcart.cartInfo,
     }),
+    ...mapGetters(['Attrkeys'])
   },
 }
 </script>
