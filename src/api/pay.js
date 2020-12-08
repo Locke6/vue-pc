@@ -34,3 +34,11 @@ export const reqSubmitOrder = function ({
     }
   })
 }
+
+// 获取微信二维码
+export const reqGetQRcode = function (orderId) {
+  return request({
+    method: "GET",
+    url: `/payment/weixin/createNative/${orderId}`
+  })
+}
