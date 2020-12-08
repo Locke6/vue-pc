@@ -92,6 +92,8 @@ export default {
       }
       this.$router.push(location) */
     },
+
+    // 退出登录，删除token
     delToken() {
       localStorage.removeItem('token')
       localStorage.removeItem('name')
